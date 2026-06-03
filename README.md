@@ -1,4 +1,4 @@
-# Netflix OTT PostgreSQL Database
+#OTT PostgreSQL Database
                            +-------------+
                            |    Genre    |
                            +-------------+
