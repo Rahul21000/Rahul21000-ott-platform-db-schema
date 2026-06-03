@@ -1,110 +1,5 @@
 #OTT PostgreSQL Database
-                           +-------------+
-                           |    Genre    |
-                           +-------------+
-                           | genre_id PK |
-                           | genre_name  |
-                           +-------------+
-                                  |
-                                  | 1:M
-                                  |
-                           +-------------+
-                           |    Video    |
-                           +-------------+
-                           | video_id PK |
-                           | video_title |
-                           | release_year|
-                           | genre_id FK |
-                           +-------------+
-                            /      |      \
-                           /       |       \
-                          /        |        \
-                         /         |         \
-                        /          |          \
-                +---------+  +-----------+  +-------------+
-                | Review  |  | Watchlist |  | PlaybackHist|
-                +---------+  +-----------+  +-------------+
-                |review_id|  |watchlist_id| |history_id PK|
-                |user_id FK| |user_id FK | |user_id FK   |
-                |video_id FK| |video_id FK| |video_id FK  |
-                |rating    | |           | |playback_date |
-                |comment   | +-----------+ +-------------+
-                +---------+
-                      |
-                      |
-                      | M:1
-                      |
-                +-------------+
-                |    Users    |
-                +-------------+
-                | user_id PK  |
-                | user_name   |
-                | user_email  |
-                | subscription|
-                +-------------+
-                   /      \
-                  /        \
-                 /          \
-                /            \
-        +-------------+   +-------------+
-        | Subscription|   |   Payment   |
-        +-------------+   +-------------+
-        |sub_id PK    |   |payment_id PK|
-        |user_id FK   |   |user_id FK   |
-        |plan         |   |amount       |
-        +-------------+   +-------------+
-
-
-            +-------------+
-            |  Language   |
-            +-------------+
-            |language_id PK|
-            |language_name |
-            +-------------+
-                   |
-                   | M:M
-                   |
-          +------------------+
-          | Video_Language   |
-          +------------------+
-          | video_id FK      |
-          | language_id FK   |
-          +------------------+
-                   |
-                   |
-                   M
-                   |
-            +-------------+
-            |    Video    |
-            +-------------+
-
-
-            +-------------+
-            |    Actor    |
-            +-------------+
-            | actor_id PK |
-            | actor_name  |
-            +-------------+
-                   |
-                   | M:M
-                   |
-          +----------------+
-          |  Movie_Actor   |
-          +----------------+
-          | video_id FK    |
-          | actor_id FK    |
-          +----------------+
-                   |
-                   |
-                   M
-                   |
-            +-------------+
-            |    Video    |
-            +-------------+
-
-
-            
-          
+                       
 A PostgreSQL database project that simulates the backend database of a Netflix-like OTT platform.
 
 ## Features
@@ -215,6 +110,108 @@ ON r.video_id = v.video_id;
 ├── queries.sql
 └── ER_Diagram.png
 ```
+  +-------------+
+                           |    Genre    |
+                           +-------------+
+                           | genre_id PK |
+                           | genre_name  |
+                           +-------------+
+                                  |
+                                  | 1:M
+                                  |
+                           +-------------+
+                           |    Video    |
+                           +-------------+
+                           | video_id PK |
+                           | video_title |
+                           | release_year|
+                           | genre_id FK |
+                           +-------------+
+                            /      |      \
+                           /       |       \
+                          /        |        \
+                         /         |         \
+                        /          |          \
+                +---------+  +-----------+  +-------------+
+                | Review  |  | Watchlist |  | PlaybackHist|
+                +---------+  +-----------+  +-------------+
+                |review_id|  |watchlist_id| |history_id PK|
+                |user_id FK| |user_id FK | |user_id FK   |
+                |video_id FK| |video_id FK| |video_id FK  |
+                |rating    | |           | |playback_date |
+                |comment   | +-----------+ +-------------+
+                +---------+
+                      |
+                      |
+                      | M:1
+                      |
+                +-------------+
+                |    Users    |
+                +-------------+
+                | user_id PK  |
+                | user_name   |
+                | user_email  |
+                | subscription|
+                +-------------+
+                   /      \
+                  /        \
+                 /          \
+                /            \
+        +-------------+   +-------------+
+        | Subscription|   |   Payment   |
+        +-------------+   +-------------+
+        |sub_id PK    |   |payment_id PK|
+        |user_id FK   |   |user_id FK   |
+        |plan         |   |amount       |
+        +-------------+   +-------------+
+
+
+            +-------------+
+            |  Language   |
+            +-------------+
+            |language_id PK|
+            |language_name |
+            +-------------+
+                   |
+                   | M:M
+                   |
+          +------------------+
+          | Video_Language   |
+          +------------------+
+          | video_id FK      |
+          | language_id FK   |
+          +------------------+
+                   |
+                   |
+                   M
+                   |
+            +-------------+
+            |    Video    |
+            +-------------+
+
+
+            +-------------+
+            |    Actor    |
+            +-------------+
+            | actor_id PK |
+            | actor_name  |
+            +-------------+
+                   |
+                   | M:M
+                   |
+          +----------------+
+          |  Movie_Actor   |
+          +----------------+
+          | video_id FK    |
+          | actor_id FK    |
+          +----------------+
+                   |
+                   |
+                   M
+                   |
+            +-------------+
+            |    Video    |
+            +-------------+
 
 ## Author
 
