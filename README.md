@@ -5,14 +5,12 @@ A PostgreSQL database project that simulates the backend database of a Netflix-l
 ## Features
 
 * User Management
-* Video Management
 * Genres
 * Languages
 * Watchlist
 * Reviews and Ratings
 * Payments
 * Subscriptions
-* Playback History
 
 
 ## Database Tables
@@ -20,27 +18,19 @@ A PostgreSQL database project that simulates the backend database of a Netflix-l
 ### Core Tables
 
 * users
-* video
+* profile
+* content
 * genre
 * language
 * subscription
+* subscription_plan
 * payment
 
 ### User Activity Tables
 
 * watchlist
 * review
-* playback_history
-* interaction
-
-
-### Content Tables
-
-* episode
-* actor
-* director
-* movie_actor
-* video_language
+  
 
 ## Technologies Used
 
