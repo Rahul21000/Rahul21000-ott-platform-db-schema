@@ -1,47 +1,117 @@
 
--- OTT_Database Schema
+#OTT_Database Schema
 
-
-
-CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    user_name VARCHAR(100),
-    user_email VARCHAR(100) UNIQUE,
-    user_subscription VARCHAR(20)
+create table users(
+user_id Serial primary key,
+user_name varchar(255),
+user_email varchar(255),
+mobile varchar(13),
+user_password varchar(255)
 );
 
--- User Data
-
-INSERT INTO users (user_name, user_email, user_subscription)
+INSERT INTO users (user_name, user_email, mobile,user_password)
 VALUES
-('User1', 'user1@gmail.com', 'Premium'),
-('User2', 'user2@gmail.com', 'Premium'),
-('User3', 'user3@gmail.com', 'Premium'),
-('User4', 'user4@gmail.com', 'Premium'),
-('User5', 'user5@gmail.com', 'Premium'),
-('User6', 'user6@gmail.com', 'Premium'),
-('User7', 'user7@gmail.com', 'Premium'),
-('User8', 'user8@gmail.com', 'Premium'),
-('User9', 'user9@gmail.com', 'Premium'),
-('User10', 'user10@gmail.com', 'Premium'),
-('User11', 'user11@gmail.com', 'Premium'),
-('User12', 'user12@gmail.com', 'Premium'),
-('User13', 'user13@gmail.com', 'Premium'),
-('User14', 'user14@gmail.com', 'Premium'),
-('User15', 'user15@gmail.com', 'Premium');
+('rahul', 'rahul@gmail.com','9897949597','rahul@123'),
+('nandu', 'nandu@gmail.com', '9897949596','nandu@123'),
+('surekha', 'surekha@gmail.com', '9897949595','surekha@123'),
+('raja', 'raja@gmail.com', '9897949594','raja@123'),
+('arvind', 'arvind@gmail.com', '9897949591','arvind@123'),
+('pawan', 'pawan@gmail.com', '9897949592','pawan@123'),
+('deekshitha', 'deekshitha@gmail.com', '9897949590','deekshitha@123');
 
-SELECT * FROM users;
+select * from users;
 
-CREATE TABLE genre (
-    genre_id SERIAL PRIMARY KEY,
-    genre_name VARCHAR(50)
+SELECT count(*) as total_users
+FROM users;
+
+CREATE TABLE subscription_plans (
+    plan_id SERIAL PRIMARY KEY,
+    plan_name VARCHAR(50) NOT NULL,
+    monthly_price DECIMAL(10,2) NOT NULL
 );
 
-INSERT INTO genre(genre_name) VALUES
-('Action'),('Comedy'),('Drama'),('Sci-Fi'),('Horror');
+CREATE TABLE profiles (
+    profile_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    profile_name VARCHAR(50) NOT NULL,
+    profile_picture VARCHAR(500),
+    age_group VARCHAR(20)
+);
 
-SELECT * FROM genre;
 
+
+INSERT INTO profiles
+(user_id, profile_name, profile_picture, age_group)
+VALUES
+(1, 'Rahul', 'rahul_avatar.png', 'Adult'),
+(2, 'nandu', 'nandu_avatar.png', 'Adult'),
+(3, 'surekha', 'surekha_profile.jpg', 'Adult'),
+(4, 'raja', 'raja_avatar.webp', 'Adult'),
+(5, 'arvind', 'arvind_pic.png', 'Adult'),
+(6, 'pawan', 'pawan_profile.jpg', 'Adult');
+
+
+select * from profiles;
+
+SELECT profile_name, profile_picture
+FROM profiles;
+
+SELECT *
+FROM profiles
+WHERE user_id = 1;
+
+SELECT user_id, COUNT(*) AS profile_count
+FROM profiles
+GROUP BY user_id;
+
+SELECT user_id, COUNT(*) AS profile_count
+FROM profiles
+GROUP BY user_id
+HAVING COUNT(*) > 1;
+
+SELECT *
+FROM profiles
+WHERE age_group = 'Kids';
+
+SELECT *
+FROM profiles
+WHERE profile_name LIKE 'A%';
+
+UPDATE profiles
+SET profile_picture = 'new_avatar.png'
+WHERE profile_id = 3;
+
+DELETE FROM profiles
+WHERE profile_id = 2;
+
+SELECT age_group, COUNT(*) AS total_profiles
+FROM profiles
+GROUP BY age_group;
+
+SELECT u.user_id,
+       u.email,
+       p.profile_name,
+       p.profile_picture
+FROM users u
+JOIN profiles p
+ON u.user_id = p.user_id;
+
+SELECT u.user_id, u.email
+FROM users u
+LEFT JOIN profiles p
+ON u.user_id = p.user_id
+WHERE p.profile_id IS NULL;
+
+--Find the number of profiles per age group
+SELECT age_group,
+       COUNT(*) AS total
+FROM profiles
+GROUP BY age_group
+ORDER BY total DESC;
+
+SELECT *
+FROM profiles
+LIMIT 5;
 
 CREATE TABLE video (
     video_id SERIAL PRIMARY KEY,
@@ -50,6 +120,136 @@ CREATE TABLE video (
     release_year INT
 );
 
+
+select * from subscription_plans;
+
+INSERT INTO subscription_plans
+(plan_name, monthly_price)
+VALUES
+('Basic', 199.00),
+('Standard', 499.00),
+('Premium', 649.00),
+('Family', 799.00),
+('Annual Basic', 1999.00),
+('Annual Premium', 6499.00);
+
+select * from subscription_plans;
+
+CREATE TABLE subscriptions (
+    subscription_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    plan_id INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    status VARCHAR(20) NOT NULL,
+
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id),
+
+    CONSTRAINT fk_plan
+        FOREIGN KEY (plan_id)
+        REFERENCES subscription_plans(plan_id)
+);
+
+
+INSERT INTO subscriptions
+(user_id, plan_id, start_date, end_date, status)
+VALUES
+(1, 1, '2025-01-01', '2025-02-01', 'Active'),
+(2, 2, '2025-01-15', '2025-02-15', 'Active'),
+(3, 4, '2025-02-01', '2025-03-01', 'Expired'),
+(4, 3, '2025-02-10', '2025-03-10', 'Cancelled'),
+(5, 5, '2025-03-01', '2025-04-01', 'Active'),
+(6, 2, '2025-03-15', '2025-04-15', 'Active');
+
+select * from subscriptions;
+
+--Show active subscriptions
+
+SELECT *
+select * 
+from subscriptions 
+where status = 'Active';
+
+SELECT s.subscription_id,
+       s.user_id,
+       p.plan_name,
+       s.start_date,
+       s.end_date,
+       s.status
+FROM subscriptions s
+JOIN subscription_plans p
+ON s.plan_id = p.plan_id;
+
+SELECT status,
+       COUNT(*) AS total_subscriptions
+FROM subscriptions
+GROUP BY status;
+
+SELECT *
+FROM subscriptions
+WHERE status = 'Expired';
+
+--Find the latest subscription
+SELECT *
+FROM subscriptions
+ORDER BY start_date DESC
+LIMIT 1;
+
+--Find subscriptions ending this month
+SELECT *
+FROM subscriptions
+WHERE EXTRACT(MONTH FROM end_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+  AND EXTRACT(YEAR FROM end_date) = EXTRACT(YEAR FROM CURRENT_DATE);
+
+CREATE TABLE payments (
+    payment_id SERIAL PRIMARY KEY,
+    subscription_id INT REFERENCES subscriptions(subscription_id),
+    amount DECIMAL(10,2) NOT NULL,
+    payment_method VARCHAR(20),
+    payment_date DATE,
+    payment_status VARCHAR(20)
+);
+
+select * from subscriptions;
+INSERT INTO payments
+(subscription_id, amount, payment_method, payment_date, payment_status)
+VALUES
+(11, 199.00, 'Credit Card', '2025-01-01', 'Success'),
+(12, 499.00, 'UPI', '2025-01-15', 'Success'),
+(13, 649.00, 'Debit Card', '2025-02-01', 'Success'),
+(14, 799.00, 'Net Banking', '2025-02-10', 'Failed'),
+(15, 149.00, 'UPI', '2025-03-01', 'Pending'),
+(16, 149.00, 'UPI', '2025-03-01', 'Pending');
+select * from payments;
+
+SELECT * FROM payments;
+
+SELECT SUM(amount) AS total_revenue
+FROM payments
+WHERE payment_status = 'Success';
+
+SELECT *
+FROM payments
+WHERE payment_status = 'Failed';
+
+SELECT payment_method,
+       COUNT(*) AS total_payments
+FROM payments
+GROUP BY payment_method;
+
+-- Show payment details with plan names
+
+SELECT p.payment_id,
+       sp.plan_name,
+       p.amount,
+       p.payment_status
+FROM payments p
+JOIN subscriptions s
+ON p.subscription_id = s.subscription_id
+JOIN subscription_plans sp
+ON s.plan_id = sp.plan_id;
 
 INSERT INTO video (video_title, genre_id, release_year)
 VALUES
@@ -85,21 +285,7 @@ VALUES
 (3,3),
 (4,4),
 (5,5),
-(6,6),
-(7,7),
-(8,8),
-(9,9),
-(10,10),
-(11,11),
-(12,12),
-(13,13),
-(14,14),
-(15,15),
-(1,16),
-(2,17),
-(3,18),
-(4,19),
-(5,20);
+(6,6);
 
 SELECT * FROM watchlist;
 
@@ -131,20 +317,6 @@ VALUES
 (4,4,5,'Good movie 4'),
 (5,5,1,'Good movie 5'),
 (6,6,2,'Good movie 6'),
-(7,7,3,'Good movie 7'),
-(8,8,4,'Good movie 8'),
-(9,9,5,'Good movie 9'),
-(10,10,1,'Good movie 10'),
-(11,11,2,'Good movie 11'),
-(12,12,3,'Good movie 12'),
-(13,13,4,'Good movie 13'),
-(14,14,5,'Good movie 14'),
-(15,15,1,'Good movie 15'),
-(1,16,2,'Good movie 16'),
-(2,17,3,'Good movie 17'),
-(3,18,4,'Good movie 18'),
-(4,19,5,'Good movie 19'),
-(5,20,1,'Good movie 20');
 
 SELECT * FROM review;
 
@@ -161,33 +333,6 @@ JOIN users u
 JOIN video v
     ON r.video_id = v.video_id;
 
-
-CREATE TABLE payment (
-    payment_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id),
-    amount DECIMAL(10,2)
-);
-
-
-INSERT INTO payment (user_id, amount)
-VALUES
-(1, 499.00),
-(2, 49.00),
-(3, 49.00),
-(4, 49.00),
-(5, 49.00),
-(6, 49.00),
-(7, 49.00),
-(8, 49.00),
-(9, 49.00),
-(10, 49.00),
-(11, 49.00),
-(12, 49.00),
-(13, 49.00),
-(14, 49.00),
-(15, 49.00);
-
-SELECT * FROM payment ;
 
 CREATE TABLE favorites (
     favorite_id SERIAL PRIMARY KEY,
