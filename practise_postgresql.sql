@@ -251,34 +251,33 @@ ON p.subscription_id = s.subscription_id
 JOIN subscription_plans sp
 ON s.plan_id = sp.plan_id;
 
-INSERT INTO video (video_title, genre_id, release_year)
-VALUES
-('Avengers: Endgame',1,2019),
-('Interstellar',4,2014),
-('The Dark Knight',1,2008),
-('Joker',3,2019),
-('The Conjuring',5,2013);
-
-SELECT * FROM video 
-
---Show videos with their genre names
-
-SELECT
-    v.video_id,
-    v.video_title,
-    g.genre_name,
-    v.release_year
-FROM video v
-JOIN genre g
-ON v.genre_id = g.genre_id;
-
-CREATE TABLE watchlist (
-    watchlist_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id),
-    video_id INT REFERENCES video(video_id)
+CREATE TABLE content (
+    content_id SERIAL PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
+    release_year INT,
+    content_type VARCHAR(20) -- Movie, Series
 );
 
-INSERT INTO watchlist(user_id, video_id)
+INSERT INTO content
+(title, description, release_year, content_type)
+VALUES
+('Inception', 'A mind-bending sci-fi thriller.', 2010, 'Movie'),
+('Interstellar', 'A journey through space and time.', 2014, 'Movie'),
+('The Dark Knight', 'Batman faces the Joker.', 2008, 'Movie'),
+('Stranger Things', 'Supernatural mysteries in Hawkins.', 2016, 'Series'),
+('Money Heist', 'A group of robbers carry out elaborate heists.', 2017, 'Series'),
+('Breaking Bad', 'A chemistry teacher becomes a drug kingpin.', 2008, 'Series'),
+('3 Idiots', 'Three engineering students navigate college life.', 2009, 'Movie'),
+('KGF Chapter 1', 'Rise of a gangster in Kolar Gold Fields.', 2018, 'Movie'),
+('The Family Man', 'An intelligence officer balances work and family.', 2019, 'Series'),
+('Squid Game', 'Contestants compete in deadly games.', 2021, 'Series');CREATE TABLE watchlist (
+    watchlist_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id),
+    content_id INT REFERENCES content(content_id)
+);
+
+INSERT INTO watchlist(user_id, content_id)
 VALUES
 (1,1),
 (2,2),
@@ -293,7 +292,7 @@ SELECT * FROM watchlist;
 
 SELECT
     u.user_name,
-    v.video_title
+    v.title
 FROM watchlist w
 JOIN users u
     ON w.user_id = u.user_id
@@ -304,12 +303,12 @@ JOIN video v
 CREATE TABLE review (
     review_id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(user_id),
-    video_id INT REFERENCES video(video_id),
+    content_id INT REFERENCES video(content_id),
     rating INT,
     comment TEXT
 );
 
-INSERT INTO review(user_id, video_id, rating, comment)
+INSERT INTO review(user_id, content_id, rating, comment)
 VALUES
 (1,1,2,'Good movie 1'),
 (2,2,3,'Good movie 2'),
@@ -331,13 +330,13 @@ FROM review r
 JOIN users u
     ON r.user_id = u.user_id
 JOIN video v
-    ON r.video_id = v.video_id;
+    ON r.video_id = v.content_id;
 
 
 CREATE TABLE favorites (
     favorite_id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(user_id),
-    video_id INT REFERENCES video(video_id)
+    video_id INT REFERENCES video(content_id)
 );
 
 CREATE TABLE language (
