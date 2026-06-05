@@ -1,1 +1,17 @@
+CREATE TABLE movies (
+    movie_id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    release_year INT,
+    duration INT,
+    language VARCHAR(50)
+);
 
+INSERT INTO movies
+(title, description, release_year, duration, language)
+VALUES
+('Inception', 'Sci-fi thriller', 2010, 148, 'English'),
+('Interstellar', 'Space adventure', 2014, 169, 'English'),
+('KGF', 'Action drama', 2018, 156, 'Kannada'),
+('3 Idiots', 'Comedy drama', 2009, 170, 'Hindi');
+select * from movies;
